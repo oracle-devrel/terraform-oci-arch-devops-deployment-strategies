@@ -1,3 +1,166 @@
-// see https://github.com/oracle-devrel/action-release-zip-maker for docs
 [
-]
+    {
+      "action": "create_zip",
+      "file_name": "terraform-oci-arch-devops-deployment-strategies-bluegreen-deployments-instances-stack-latest.zip",
+      "files": [
+        {
+          "src_pattern": "bluegreen-deployments-instances/*.tf",
+          "dst_path": ".",
+          "exclude": [
+            "bluegreen-deployments-instances/provider.tf",
+            "bluegreen-deployments-instances/variables.tf"
+          ]
+        },
+        {
+          "src": "LICENSE"
+        },
+        {
+          "src": "bluegreen-deployments-instances/schema.yaml",
+          "dst": "schema.yaml"
+        },
+        {
+          "src": "bluegreen-deployments-instances/orm/variables.tf",
+          "dst": "variables.tf"
+        },
+        {
+          "src": "bluegreen-deployments-instances/orm/provider.tf",
+          "dst": "provider.tf"
+        },
+        {
+          "src": "bluegreen-deployments-instances/git-askpass-helper.sh",
+          "dst": "git-askpass-helper.sh"
+        },
+        {
+          "src_pattern": "bluegreen-deployments-instances/userdata/*",
+          "dst_path": "."
+        }
+      ]
+    },
+    {
+      "action": "upload_file",
+      "file_name": "terraform-oci-arch-devops-deployment-strategies-bluegreen-deployments-instances-stack-latest.zip"
+    },
+    {
+      "action": "create_zip",
+      "file_name": "terraform-oci-arch-devops-deployment-strategies-bluegreen-deployments-oke-stack-latest.zip",
+      "files": [
+        {
+          "src_pattern": "bluegreen-deployments-oke/*.tf",
+          "dst_path": ".",
+          "exclude": [
+            "bluegreen-deployments-oke/provider.tf",
+            "bluegreen-deployments-oke/variables.tf"
+          ]
+        },
+        {
+          "src": "LICENSE"
+        },
+        {
+          "src": "bluegreen-deployments-oke/schema.yaml",
+          "dst": "schema.yaml"
+        },
+        {
+          "src": "bluegreen-deployments-oke/orm/variables.tf",
+          "dst": "variables.tf"
+        },
+        {
+          "src": "bluegreen-deployments-oke/orm/provider.tf",
+          "dst": "provider.tf"
+        },
+        {
+          "src": "bluegreen-deployments-oke/git-askpass-helper.sh",
+          "dst": "git-askpass-helper.sh"
+        },
+        {
+          "src_pattern": "bluegreen-deployments-oke/userdata/*",
+          "dst_path": "."
+        }
+      ]
+    },
+    {
+      "action": "upload_file",
+      "file_name": "terraform-oci-arch-devops-deployment-strategies-bluegreen-deployments-oke-stack-latest.zip"
+    },
+    {
+      "action": "create_zip",
+      "file_name": "terraform-oci-arch-devops-deployment-strategies-canary-deployments-instances-stack-latest.zip",
+      "files": [
+        {
+          "src_pattern": "canary-deployments-instances/*.tf",
+          "dst_path": ".",
+          "exclude": [
+            "canary-deployments-instances/provider.tf",
+            "canary-deployments-instances/variables.tf"
+          ]
+        },
+        {
+          "src": "LICENSE"
+        },
+        {
+          "src": "canary-deployments-instances/schema.yaml",
+          "dst": "schema.yaml"
+        },
+        {
+          "src": "canary-deployments-instances/orm/variables.tf",
+          "dst": "variables.tf"
+        },
+        {
+          "src": "canary-deployments-instances/orm/provider.tf",
+          "dst": "provider.tf"
+        },
+        {
+          "src": "canary-deployments-instances/git-askpass-helper.sh",
+          "dst": "git-askpass-helper.sh"
+        },
+        {
+          "src_pattern": "canary-deployments-instances/userdata/*",
+          "dst_path": "."
+        }
+      ]
+    },
+    {
+      "action": "upload_file",
+      "file_name": "terraform-oci-arch-devops-deployment-strategies-canary-deployments-instances-stack-latest.zip"
+    },
+    {
+      "action": "create_zip",
+      "file_name": "terraform-oci-arch-devops-deployment-strategies-canary-deployments-oke-stack-latest.zip",
+      "files": [
+        {
+          "src_pattern": "canary-deployments-oke/*.tf",
+          "dst_path": ".",
+          "exclude": [
+            "canary-deployments-oke/provider.tf",
+            "canary-deployments-oke/variables.tf"
+          ]
+        },
+        {
+          "src": "LICENSE"
+        },
+        {
+          "src": "canary-deployments-oke/schema.yaml",
+          "dst": "schema.yaml"
+        },
+        {
+          "src": "canary-deployments-oke/orm/variables.tf",
+          "dst": "variables.tf"
+        },
+        {
+          "src": "canary-deployments-oke/orm/provider.tf",
+          "dst": "provider.tf"
+        },
+        {
+          "src": "canary-deployments-oke/git-askpass-helper.sh",
+          "dst": "git-askpass-helper.sh"
+        },
+        {
+          "src_pattern": "canary-deployments-oke/userdata/*",
+          "dst_path": "."
+        }
+      ]
+    },
+    {
+      "action": "upload_file",
+      "file_name": "terraform-oci-arch-devops-deployment-strategies-canary-deployments-instances-stack-latest.zip"
+    }
+  ]
