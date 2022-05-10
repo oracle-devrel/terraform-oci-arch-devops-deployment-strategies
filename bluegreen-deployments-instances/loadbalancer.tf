@@ -8,14 +8,14 @@ resource "oci_load_balancer_load_balancer" "test_load_balancer" {
     freeform_tags              = {}
     is_private                 = false
     network_security_group_ids = []
-    shape                      = "flexible"
+    shape                      = var.loadbalancer_shape
     subnet_ids                 = [
        oci_core_subnet.subnet.id
     ]
     
     shape_details {
-        maximum_bandwidth_in_mbps = var.maximum_bandwidth_in_mbps
-        minimum_bandwidth_in_mbps = var.minimum_bandwidth_in_mbps
+        maximum_bandwidth_in_mbps = var.loadbalancer_maximum_bandwidth_in_mbps
+        minimum_bandwidth_in_mbps = var.loadbalancer_minimum_bandwidth_in_mbps
     }
 }
 
@@ -69,7 +69,7 @@ resource "oci_load_balancer_listener" "test_listener" {
     hostname_names           = []
     load_balancer_id         = oci_load_balancer_load_balancer.test_load_balancer.id
     name                     = var.loadbalancer_listner_name
-    port                     = 80
+    port                     = var.loadbalancer_listener_port
     protocol                 = "HTTP"
     rule_set_names           = []
 

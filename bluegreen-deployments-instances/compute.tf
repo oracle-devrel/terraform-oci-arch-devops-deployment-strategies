@@ -3,9 +3,23 @@
 
 # This Terraform script provisions a compute instance required for OCI DevOps service
 
+data "template_file" "bootstrap" {
+  template = file("${path.module}/userdata/bootstrap")
+}
+
+data "template_cloudinit_config" "cloud_init" {
+  gzip          = true
+  base64_encode = true
+
+  part {
+    filename     = "ainit.sh"
+    content_type = "text/x-shellscript"
+    content      = data.template_file.bootstrap.rendered
+  }
+}
 
 resource "oci_core_instance" "compute_instance_blue" {
-  availability_domain = var.availablity_domain_name == "" ? data.oci_identity_availability_domains.ADs.availability_domains[0]["name"] : var.availablity_domain_name
+  availability_domain = var.availability_domain_name == "" ? data.oci_identity_availability_domains.ADs.availability_domains[0]["name"] : var.availability_domain_name
   compartment_id      = var.compartment_ocid
   display_name        = var.compute_instance_blue_name
   shape               = var.instance_shape
@@ -15,13 +29,13 @@ resource "oci_core_instance" "compute_instance_blue" {
     }
 
   shape_config {
-    ocpus         = var.instance_ocpus
-    memory_in_gbs = var.instance_shape_config_memory_in_gbs
+    ocpus         = var.instance_shape_ocpus
+    memory_in_gbs = var.instance_shape_memory_in_gbs
   }
 
   metadata = {
     ssh_authorized_keys = var.ssh_public_key == "" ? tls_private_key.public_private_key_pair.public_key_openssh : var.ssh_public_key
-    user_data           = base64encode(file("./userdata/bootstrap"))
+    user_data           = data.template_cloudinit_config.cloud_init.rendered
 
   }
 
@@ -46,7 +60,7 @@ resource "oci_core_instance" "compute_instance_blue" {
 
 
 resource "oci_core_instance" "compute_instance_green" {
-  availability_domain = var.availablity_domain_name == "" ? data.oci_identity_availability_domains.ADs.availability_domains[0]["name"] : var.availablity_domain_name
+  availability_domain = var.availability_domain_name == "" ? data.oci_identity_availability_domains.ADs.availability_domains[0]["name"] : var.availability_domain_name
   compartment_id      = var.compartment_ocid
   display_name        = var.compute_instance_green_name
   shape               = var.instance_shape
@@ -56,13 +70,13 @@ resource "oci_core_instance" "compute_instance_green" {
     }
 
   shape_config {
-    ocpus         = var.instance_ocpus
-    memory_in_gbs = var.instance_shape_config_memory_in_gbs
+    ocpus         = var.instance_shape_ocpus
+    memory_in_gbs = var.instance_shape_memory_in_gbs
   }
 
   metadata = {
     ssh_authorized_keys = var.ssh_public_key == "" ? tls_private_key.public_private_key_pair.public_key_openssh : var.ssh_public_key
-    user_data           = base64encode(file("./userdata/bootstrap"))
+    user_data           = data.template_cloudinit_config.cloud_init.rendered
 
   }
 

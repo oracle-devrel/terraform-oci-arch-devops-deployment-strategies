@@ -35,7 +35,7 @@ variable "project_logging_config_retention_period_in_days" {
 }
 
 variable "project_description" {
-  default = "DevOps CI/CD Sample Project"
+  default = "DevOps CI/CD Sample Project for BlueGreen Deployment"
 }
 
 
@@ -52,11 +52,11 @@ variable "instance_shape" {
   default     = "VM.Standard.E4.Flex"
 }
 
-variable "instance_ocpus" {
+variable "instance_shape_ocpus" {
   default = 1
 }
 
-variable "instance_shape_config_memory_in_gbs" {
+variable "instance_shape_memory_in_gbs" {
   default = 1
 }
 
@@ -70,7 +70,7 @@ variable "linux_os_version" {
   default     = "8"
 }
 
-variable "availablity_domain_name" {
+variable "availability_domain_name" {
   default = ""
 }
 
@@ -194,11 +194,15 @@ variable "loadbalancer_listner_name"{
   default = "devops_lb_listner"
 }
 
-variable "maximum_bandwidth_in_mbps" {
+variable "loadbalancer_shape" {
+  default = "flexible"
+}
+
+variable "loadbalancer_maximum_bandwidth_in_mbps" {
   default = 10
 }
 
-variable "minimum_bandwidth_in_mbps" {
+variable "loadbalancer_minimum_bandwidth_in_mbps" {
   default = 10 
 }
 
@@ -215,6 +219,10 @@ variable "loadbalancer_backendset_port" {
 }
 
 variable "loadbalancer_backend_port" {
+  default = 80
+}
+
+variable "loadbalancer_listener_port" {
   default = 80
 }
 
