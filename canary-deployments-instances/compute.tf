@@ -1,10 +1,23 @@
 ## Copyright (c) 2022, Oracle and/or its affiliates.
 ## All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-# # This Terraform script provisions a compute instance required for OCI DevOps service
+data "template_file" "bootstrap" {
+  template = file("${path.module}/userdata/bootstrap")
+}
+
+data "template_cloudinit_config" "cloud_init" {
+  gzip          = true
+  base64_encode = true
+
+  part {
+    filename     = "ainit.sh"
+    content_type = "text/x-shellscript"
+    content      = data.template_file.bootstrap.rendered
+  }
+}
 
 resource "oci_core_instance" "compute_instance_prod" {
-  availability_domain = var.availablity_domain_name == "" ? data.oci_identity_availability_domains.ADs.availability_domains[0]["name"] : var.availablity_domain_name
+  availability_domain = var.availability_domain_name == "" ? data.oci_identity_availability_domains.ADs.availability_domains[0]["name"] : var.availability_domain_name
   compartment_id      = var.compartment_ocid
   display_name        = var.compute_instance_prod_name
   shape               = var.instance_shape
@@ -20,7 +33,7 @@ resource "oci_core_instance" "compute_instance_prod" {
 
   metadata = {
     ssh_authorized_keys = var.ssh_public_key == "" ? tls_private_key.public_private_key_pair.public_key_openssh : var.ssh_public_key
-    user_data           = base64encode(file("./userdata/bootstrap"))
+    user_data           = data.template_cloudinit_config.cloud_init.rendered
 
   }
 
@@ -45,7 +58,7 @@ resource "oci_core_instance" "compute_instance_prod" {
 
 
 resource "oci_core_instance" "compute_instance_canary" {
-  availability_domain = var.availablity_domain_name == "" ? data.oci_identity_availability_domains.ADs.availability_domains[0]["name"] : var.availablity_domain_name
+  availability_domain = var.availability_domain_name == "" ? data.oci_identity_availability_domains.ADs.availability_domains[0]["name"] : var.availability_domain_name
   compartment_id      = var.compartment_ocid
   display_name        = var.compute_instance_canary_name
   shape               = var.instance_shape
@@ -61,7 +74,7 @@ resource "oci_core_instance" "compute_instance_canary" {
 
   metadata = {
     ssh_authorized_keys = var.ssh_public_key == "" ? tls_private_key.public_private_key_pair.public_key_openssh : var.ssh_public_key
-    user_data           = base64encode(file("./userdata/bootstrap"))
+    user_data           = data.template_cloudinit_config.cloud_init.rendered
 
   }
 

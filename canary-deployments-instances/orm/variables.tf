@@ -20,7 +20,7 @@ variable oci_user_authtoken {
 }
 
 variable "app_name" {
-  default     = "DevOps"
+  default     = "DevOpsCanaryInstances"
   description = "Application name. Will be used as prefix to identify resources, such as OKE, VCN, DevOps, and others"
 }
 
@@ -35,7 +35,7 @@ variable "project_logging_config_retention_period_in_days" {
 }
 
 variable "project_description" {
-  default = "DevOps CI/CD Sample Project"
+  default = "DevOps CI/CD Sample Project (Canary Instances)"
 }
 
 
@@ -52,11 +52,11 @@ variable "instance_shape" {
   default     = "VM.Standard.E4.Flex"
 }
 
-variable "instance_ocpus" {
+variable "instance_shape_ocpus" {
   default = 1
 }
 
-variable "instance_shape_config_memory_in_gbs" {
+variable "instance_shape_memory_in_gbs" {
   default = 1
 }
 
@@ -67,10 +67,10 @@ variable "instance_os" {
 
 variable "linux_os_version" {
   description = "Operating system version for all Linux instances"
-  default     = "7.9"
+  default     = "8"
 }
 
-variable "availablity_domain_name" {
+variable "availability_domain_name" {
   default = ""
 }
 
@@ -194,16 +194,20 @@ variable "loadbalancer_listner_name"{
   default = "devops_lb_listner"
 }
 
-variable "maximum_bandwidth_in_mbps" {
+variable "loadbalancer_shape" {
+  default = "flexible"
+}
+
+variable "loadbalancer_maximum_bandwidth_in_mbps" {
   default = 10
 }
 
-variable "minimum_bandwidth_in_mbps" {
+variable "loadbalancer_minimum_bandwidth_in_mbps" {
   default = 10 
 }
 
 variable "loadbalancer_backend_set_name" {
-  default = "lb_backendset_for_canary"
+  default = "lb_backendset_for_bluegreen"
 }
 
 variable "loadbalancer_backendset_policy" {
@@ -215,6 +219,10 @@ variable "loadbalancer_backendset_port" {
 }
 
 variable "loadbalancer_backend_port" {
+  default = 80
+}
+
+variable "loadbalancer_listener_port" {
   default = 80
 }
 
