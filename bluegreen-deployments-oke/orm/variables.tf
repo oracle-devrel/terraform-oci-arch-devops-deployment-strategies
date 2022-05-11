@@ -9,7 +9,7 @@ variable "compartment_ocid" {}
 variable "region" {}
 
 variable "app_name" {
-  default     = "DevOps"
+  default     = "DevOpsBlueGreenOKE"
   description = "Application name. Will be used as prefix to identify resources, such as OKE, VCN, DevOps, and others"
 }
 
@@ -26,9 +26,8 @@ variable "project_logging_config_retention_period_in_days" {
 }
 
 variable "project_description" {
-  default = "DevOps CI/CD Sample Project"
+  default = "DevOps CI/CD Sample Project for OKE BlueGreen Deployment"
 }
-
 
 variable "build_pipeline_description" {
   default = "build pipeline for python application with blue-green deployment strategies"

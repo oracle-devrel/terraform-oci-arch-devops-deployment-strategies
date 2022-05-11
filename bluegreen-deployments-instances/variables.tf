@@ -20,7 +20,7 @@ variable oci_user_authtoken {
 }
 
 variable "app_name" {
-  default     = "DevOps"
+  default     = "DevOpsBlueGreenInstance"
   description = "Application name. Will be used as prefix to identify resources, such as OKE, VCN, DevOps, and others"
 }
 
@@ -35,7 +35,7 @@ variable "project_logging_config_retention_period_in_days" {
 }
 
 variable "project_description" {
-  default = "DevOps CI/CD Sample Project for BlueGreen Deployment"
+  default = "DevOps CI/CD Sample Project for Instance BlueGreen Deployment"
 }
 
 
