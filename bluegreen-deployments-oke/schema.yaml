@@ -1,9 +1,9 @@
 ## Copyright (c) 2022, Oracle and/or its affiliates.
 ## All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-title: "Build a CI/CD pipelines by using OCI DevOps services."
-stackDescription: "Build a continuous integration and deployment pipeline by using Oracle Cloud Infrastructure DevOps services." 
-description: "Build a continuous integration and deployment pipeline by using Oracle Cloud Infrastructure DevOps services."
+title: "Deployment on OKE with Blue/Green strategy by using OCI DevOps services."
+stackDescription: "Deployment on OKE with Blue/Green strategy by using Oracle Cloud Infrastructure DevOps services." 
+description: "Deployment on OKE with Blue/Green strategy by using Oracle Cloud Infrastructure DevOps services."
 schemaVersion: 1.1.0
 version: "20190404"
 locale: "en"
@@ -90,7 +90,6 @@ variableGroups:
   visible: true  
   variables:    
     - deliver_artifact_stage_display_name
-    - registry_display_name
     - container_repository_is_public
 
 - title: DevOps Build Pipeline - Deploy Stage Configuration
@@ -100,6 +99,29 @@ variableGroups:
     - deploy_stage_description
     - deploy_pipeline_description
     - deploy_artifact_display_name
+
+- title: "DevOps Build Pipeline - BlueGreen Deploy to Instance Stage Configuration"
+  visible: true  
+  variables:
+    - bluegreen_deploy_stage_name
+    - bluegreen_deploy_stage_description
+    - deploy_stage_bluegreen_ingress_name
+    - deploy_stage_green_namespace
+    - deploy_stage_blue_namespace
+
+- title: "DevOps Build Pipeline - BlueGreen Approval Stage Configuration"
+  visible: true  
+  variables:
+    - approval_display_name
+    - approval_stage_description
+    - bluegreen_prod_release_count_of_approval
+
+- title: "DevOps Build Pipeline - BlueGreen Swtich Stage Configuration"
+  visible: true  
+  variables:
+    - percentage_bluegreen_shift
+    - blue_green_stage_shift_description
+    - blue_green_stage_shift_name
 
 - title: Encryption Settings
   description: Policy setting for the stack deployment
@@ -123,6 +145,7 @@ variableGroups:
     - cluster_workers_visibility
     - cluster_endpoint_visibility
     - k8s_version
+    - ingress_version
 
 - title: OKE Worker Nodes Configuration
   visible: true 
@@ -571,13 +594,6 @@ variables:
     required: false
     visible: true  
 
-  registry_display_name:
-    type: string
-    title: "Registry Display Name"
-    description: "Registry Display Name"
-    required: false
-    visible: true
-
   deliver_artifact_stage_display_name: 
     type: string
     title: "Deliver Artifact Stage Display Name"
@@ -626,4 +642,60 @@ variables:
     required: false
     visible: true
 
+  bluegreen_prod_release_count_of_approval:
+    type: integer
+    minimum: 1
+    maximum: 255
+    title: "Number of Approvals in DevOps Deploy Approval Stage"
+    description: "Number of Approvals in DevOps Deploy Approval Stage"
+    required: false
+    visible: true
 
+  approval_display_name:
+    type: string
+    title: "Display Name of Approval in DevOps Deploy Approval Stage"
+    description: "Display Name of Approval in DevOps Deploy Approval Stage"
+    required: false
+    visible: true
+
+  approval_stage_description:
+    type: string
+    title: "Description of Approval in DevOps Deploy Approval Stage"
+    description: "Description of Approval in DevOps Deploy Approval Stage"
+    required: false
+    visible: true
+
+  bluegreen_deploy_stage_name:
+    type: string
+    title: "Name for DevOps Deploy Blue Green Deploy to OKE Stage"
+    description: "Name for DevOps Deploy Blue Green Deploy to OKE Stage"
+    required: false
+    visible: true
+
+  bluegreen_deploy_stage_description:
+    type: string
+    title: "DevOps BlueGreen Deploy Stage Pipeline Description"
+    description: "A short description for the DevOps BlueGreen Deploy Pipeline"
+    required: false
+    visible: true
+
+  deploy_stage_bluegreen_ingress_name:
+    type: string
+    title: "DevOps BlueGreen Deploy Stage Ingress Name"
+    description: "DevOps BlueGreen Deploy Stage Ingress Name"
+    required: false
+    visible: true
+
+  deploy_stage_green_namespace:
+    type: string
+    title: "DevOps BlueGreen Deploy Stage Green Namespace"
+    description: "DevOps BlueGreen Deploy Stage Green Namespace"
+    required: false
+    visible: true
+
+  deploy_stage_blue_namespace:
+    type: string
+    title: "DevOps BlueGreen Deploy Stage Blue Namespace"
+    description: "DevOps BlueGreen Deploy Stage Blue Namespace"
+    required: false
+    visible: true

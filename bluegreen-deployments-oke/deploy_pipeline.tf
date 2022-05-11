@@ -1,6 +1,19 @@
 ## Copyright (c) 2022, Oracle and/or its affiliates.
 ## All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
 
+
+data "template_file" "oci-oke-deployment" {
+  template = file("${path.module}/manifest/oci-oke-deployment.yaml")
+
+  vars = {
+    region    = "${local.ocir_docker_repository}"
+    name      = "${local.ocir_namespace}"
+    image     = "${oci_artifacts_container_repository.test_container_repository.display_name}"
+    hash      = "$${BUILDRUN_HASH}" 
+    namespace = "$${namespace}" 
+  }
+}
+
 resource "oci_devops_deploy_environment" "test_environment" {
   display_name            = "oke_environment_${random_id.tag.hex}"
   description             = "oke based enviroment"
@@ -19,7 +32,7 @@ resource "oci_devops_deploy_artifact" "test_deploy_oke_artifact" {
 
   deploy_artifact_source {
     deploy_artifact_source_type = var.deploy_artifact_source_type #INLINE,GENERIC_ARTIFACT_OCIR
-    base64encoded_content       = templatefile("${path.module}/manifest/oci-oke-deployment.yaml", { region = "${local.ocir_docker_repository}", name = "${local.ocir_namespace}", image = "${oci_artifacts_container_repository.test_container_repository.display_name}", hash = "$${BUILDRUN_HASH}", namespace = "$${namespace}" })
+    base64encoded_content       = data.template_file.oci-oke-deployment.rendered
   }
   defined_tags = { "${oci_identity_tag_namespace.ArchitectureCenterTagNamespace.name}.${oci_identity_tag.ArchitectureCenterTag.name}" = var.release }
 }

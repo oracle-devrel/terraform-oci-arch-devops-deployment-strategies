@@ -50,6 +50,7 @@ resource "oci_identity_policy" "devopspolicy" {
   statements = [
     "Allow group Administrators to manage devops-family in compartment id ${var.compartment_ocid}",
     "Allow group Administrators to manage all-artifacts in compartment id ${var.compartment_ocid}",
+    "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to manage all-resources in compartment id ${var.compartment_ocid}",
     "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to manage repos in compartment id ${var.compartment_ocid}",
     "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to read secret-family in compartment id ${var.compartment_ocid}",
     "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to manage devops-family in compartment id ${var.compartment_ocid}",

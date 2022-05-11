@@ -91,7 +91,7 @@ variable "repository_default_branch" {
 }
 
 variable "repository_description" {
-  default = "OCI Devops blue greeninstance sample application"
+  default = "OCI Devops blue green instance sample application"
 }
 
 variable "repository_repository_type" {
@@ -233,8 +233,6 @@ variable "deploy_pipeline_description" {
 variable "build_pipeline_stage_deploy_stage_type" {
   default = "TRIGGER_DEPLOYMENT_PIPELINE"
 }
-
-
 
 variable "deploy_stage_display_name" {
   default = "deploy_to_instances"

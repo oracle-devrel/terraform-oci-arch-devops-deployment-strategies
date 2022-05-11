@@ -194,12 +194,36 @@ variable "build_pipeline_stage_is_pass_all_parameters_enabled" {
   default = true
 }
 
+variable "approval_stage_description" {
+  default = "Approval for production switch"
+}
+
+variable "approval_display_name" {
+  default = "approval_for_production_switch"
+}
+
+variable "blue_green_stage_shift_description" {
+  default = "switch the traffic between OKE environment"
+}
+
+variable "blue_green_stage_shift_name" {
+  default = "blue_green_oke_traffic_shift"
+}
+
 variable "deploy_stage_bluegreen_ingress_name" {
   default = "sample-oke-bg-app-ing"
 }
 
 variable "deploy_stage_blue_namespace" {
   default = "nsblue"
+}
+
+variable "bluegreen_deploy_stage_description" {
+  default = "Deploy to OKE"
+}
+
+variable "bluegreen_deploy_stage_name" {
+  default = "deploy_to_oke"
 }
 
 variable "percentage_bluegreen_shift" {
@@ -212,10 +236,6 @@ variable "bluegreen_prod_release_count_of_approval" {
 
 variable "deploy_stage_green_namespace" {
   default = "nsgreen"
-}
-
-variable "deploy_rollback_policy" {
-  default = "AUTOMATED_STAGE_ROLLBACK_POLICY"
 }
 
 variable "ingress_version" {

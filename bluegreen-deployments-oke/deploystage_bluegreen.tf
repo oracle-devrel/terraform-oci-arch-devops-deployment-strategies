@@ -5,8 +5,8 @@ resource "oci_devops_deploy_stage" "oke_depploy_stage" {
     defined_tags                            = { "${oci_identity_tag_namespace.ArchitectureCenterTagNamespace.name}.${oci_identity_tag.ArchitectureCenterTag.name}" = var.release }
     deploy_pipeline_id                      = oci_devops_deploy_pipeline.test_deploy_pipeline.id
     deploy_stage_type                       = "OKE_BLUE_GREEN_DEPLOYMENT"
-    description                             = "Oke Deployment Stage"
-    display_name                            = "Oke Deployment Stage"
+    description                             = var.bluegreen_deploy_stage_description
+    display_name                            = var.bluegreen_deploy_stage_name
     freeform_tags                           = {}
     kubernetes_manifest_deploy_artifact_ids = [
        oci_devops_deploy_artifact.test_deploy_oke_artifact.id,
@@ -33,8 +33,8 @@ resource "oci_devops_deploy_stage" "production_release_approval" {
     defined_tags       = { "${oci_identity_tag_namespace.ArchitectureCenterTagNamespace.name}.${oci_identity_tag.ArchitectureCenterTag.name}" = var.release }
     deploy_pipeline_id = oci_devops_deploy_pipeline.test_deploy_pipeline.id
     deploy_stage_type  = "MANUAL_APPROVAL"
-    description        = "Approval for production switch"
-    display_name       = "Approval Stage"
+    description        = var.approval_stage_description
+    display_name       = var.approval_display_name
     freeform_tags      = {}
  
     
@@ -55,7 +55,8 @@ resource "oci_devops_deploy_stage" "production_oke_traffic_shift" {
     defined_tags                   = { "${oci_identity_tag_namespace.ArchitectureCenterTagNamespace.name}.${oci_identity_tag.ArchitectureCenterTag.name}" = var.release }
     deploy_pipeline_id             = oci_devops_deploy_pipeline.test_deploy_pipeline.id
     deploy_stage_type              = "OKE_BLUE_GREEN_TRAFFIC_SHIFT"
-    display_name                   = "Oke Deployment Stage_Traffic_Shift"
+    description                    = var.blue_green_stage_shift_description
+    display_name                   = var.blue_green_stage_shift_name
     freeform_tags                  = {}
     oke_blue_green_deploy_stage_id = oci_devops_deploy_stage.oke_depploy_stage.id
    
