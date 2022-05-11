@@ -608,13 +608,6 @@ variables:
     required: false
     visible: true
 
-  deploy_artifact_display_name:
-    type: string
-    title: "Deploy Artifact Display Name"
-    description: "Deploy Artifact Display Name"
-    required: false
-    visible: true
-
   deploy_pipeline_description:
     type: string
     title: "DevOps Deploy Pipeline Description"
