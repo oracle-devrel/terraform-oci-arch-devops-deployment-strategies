@@ -52,14 +52,14 @@ variableGroups:
   - release
 
 
-- title: Required Configuration
+- title: "Required Configuration"
   visible: true  
   variables:
     - oci_username
     - oci_user_authtoken
     - show_advanced
 
-- title: DevOps Project Configuration
+- title: "DevOps Project Configuration"
   visible: true  
   variables:
     - compartment_id
@@ -67,13 +67,13 @@ variableGroups:
     - project_description
     - project_logging_config_retention_period_in_days
 
-- title: DevOps Build Pipeline Configuration
+- title: "DevOps Build Pipeline Configuration"
   visible: true  
   variables:
     - build_pipeline_description
     - build_pipeline_display_name
 
-- title: DevOps Build Pipeline - Build Stage Configuration
+- title: "DevOps Build Pipeline - Build Stage Configuration"
   visible: true  
   variables:
     - repository_name
@@ -86,13 +86,13 @@ variableGroups:
     - build_pipeline_stage_is_pass_all_parameters_enabled
     - build_pipeline_stage_stage_execution_timeout_in_seconds
 
-- title: DevOps Build Pipeline - Deliver Stage Configuration
+- title: "DevOps Build Pipeline - Deliver Stage Configuration"
   visible: true  
   variables:    
     - deliver_artifact_stage_display_name
     - container_repository_is_public
 
-- title: DevOps Build Pipeline - Deploy Stage Configuration
+- title: "DevOps Build Pipeline - Deploy Stage Configuration"
   visible: true  
   variables:
     - deploy_stage_display_name
@@ -100,7 +100,7 @@ variableGroups:
     - deploy_pipeline_description
     - deploy_artifact_display_name
 
-- title: "DevOps Build Pipeline - BlueGreen Deploy to Instance Stage Configuration"
+- title: "DevOps Build Pipeline - BlueGreen Deploy to OKE Stage Configuration"
   visible: true  
   variables:
     - bluegreen_deploy_stage_name
@@ -123,7 +123,7 @@ variableGroups:
     - blue_green_stage_shift_description
     - blue_green_stage_shift_name
 
-- title: Encryption Settings
+- title: "Encryption Settings"
   description: Policy setting for the stack deployment
   visible: true  
   variables:
@@ -133,7 +133,7 @@ variableGroups:
     - create_vault_policies_for_group
     - user_admin_group_for_vault_policy
 
-- title: OKE Cluster Configuration
+- title: "OKE Cluster Configuration"
   visible: true 
   variables:
     - create_new_oke_cluster
@@ -147,7 +147,7 @@ variableGroups:
     - k8s_version
     - ingress_version
 
-- title: OKE Worker Nodes Configuration
+- title: "OKE Worker Nodes Configuration"
   visible: true 
   variables:
     - generate_public_ssh_key
@@ -657,6 +657,30 @@ variables:
     description: "Description of Approval in DevOps Deploy Approval Stage"
     required: false
     visible: true
+
+  percentage_bluegreen_shift:
+    type: integer
+    minimum: 1
+    maximum: 100
+    title: "Percentage Blue Green Shift"
+    description: "Percentage Blue Green Shift"
+    required: false
+    visible: true
+
+  blue_green_stage_shift_description:
+    type: string
+    title: "Description of Shift Stage"
+    description: "Description of Shift Stage"
+    required: false
+    visible: true
+
+  blue_green_stage_shift_name:
+    type: string
+    title: "Name of Shift Stage"
+    description: "Name of Shift Stage"
+    required: false
+    visible: true
+
 
   bluegreen_deploy_stage_name:
     type: string

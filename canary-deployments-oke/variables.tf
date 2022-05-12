@@ -9,7 +9,7 @@ variable "private_key_path" {}
 variable "region" {}
 
 variable "app_name" {
-  default     = "DevOps"
+  default     = "DevOpsCanaryOKE"
   description = "Application name. Will be used as prefix to identify resources, such as OKE, VCN, DevOps, and others"
 }
 
@@ -26,9 +26,8 @@ variable "project_logging_config_retention_period_in_days" {
 }
 
 variable "project_description" {
-  default = "DevOps CI/CD Sample Project"
+  default = "DevOps CI/CD Sample Project for OKE Canary Deployment"
 }
-
 
 variable "build_pipeline_description" {
   default = "build pipeline for python application with canary deployment strategies"
@@ -96,6 +95,22 @@ variable "build_pipeline_stage_deliver_artifact_collection_items_artifact_name" 
 
 variable "build_pipeline_stage_display_name" {
   default = "oci_devops_canary-build-pipeline"
+}
+
+variable "approval_stage_description" {
+  default = "Approval to deploy to production"
+}
+
+variable "approval_display_name" {
+  default = "approval_to_deploy_to_production"
+}
+
+variable "release_to_production_stage_description" {
+  default = "Final version from production"
+}
+
+variable "release_to_production_stage_display_name" {
+  default = "Production Release"
 }
 
 variable "deliver_artifact_stage_display_name" {
@@ -220,6 +235,13 @@ variable "canary_prod_release_count_of_approval" {
   default = 1 
 }
 
+variable "canary_stage_shift_description" {
+  default = "switch the traffic between OKE environment"
+}
+
+variable "canary_stage_shift_name" {
+  default = "canary_oke_traffic_shift"
+}
 
 variable "deploy_stage_prd_namespace" {
   default = "nscanaryprd"

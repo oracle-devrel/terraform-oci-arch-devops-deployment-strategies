@@ -32,8 +32,8 @@ resource "oci_devops_deploy_stage" "canary_oke_traffic_shift" {
     defined_tags               = { "${oci_identity_tag_namespace.ArchitectureCenterTagNamespace.name}.${oci_identity_tag.ArchitectureCenterTag.name}" = var.release }
     deploy_pipeline_id         = oci_devops_deploy_pipeline.test_deploy_pipeline.id
     deploy_stage_type          = "OKE_CANARY_TRAFFIC_SHIFT"
-    description                = "Shift traffic"
-    display_name               = "Shift to Canary"
+    description                = var.canary_stage_shift_description
+    display_name               = var.canary_stage_shift_name
     freeform_tags              = {}
     oke_canary_deploy_stage_id = oci_devops_deploy_stage.oke_depploy_stage.id
     
@@ -59,8 +59,8 @@ resource "oci_devops_deploy_stage" "production_release_approval" {
     defined_tags                             = { "${oci_identity_tag_namespace.ArchitectureCenterTagNamespace.name}.${oci_identity_tag.ArchitectureCenterTag.name}" = var.release }
     deploy_pipeline_id                       = oci_devops_deploy_pipeline.test_deploy_pipeline.id
     deploy_stage_type                        = "OKE_CANARY_APPROVAL"
-    description                              = "Approv to deploy to production"
-    display_name                             = "Approval"
+    description                              = var.approval_stage_description
+    display_name                             = var.approval_display_name
     freeform_tags                            = {}
     oke_canary_traffic_shift_deploy_stage_id = oci_devops_deploy_stage.canary_oke_traffic_shift.id
         

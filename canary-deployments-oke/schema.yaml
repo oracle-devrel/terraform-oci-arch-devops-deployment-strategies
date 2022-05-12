@@ -1,9 +1,9 @@
 ## Copyright (c) 2022, Oracle and/or its affiliates.
 ## All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-title: "Build a CI/CD pipelines by using OCI DevOps services."
-stackDescription: "Build a continuous integration and deployment pipeline by using Oracle Cloud Infrastructure DevOps services." 
-description: "Build a continuous integration and deployment pipeline by using Oracle Cloud Infrastructure DevOps services."
+title: "Deployment on OKE with Canary strategy by using OCI DevOps services."
+stackDescription: "Deployment on OKE with Canary strategy by using Oracle Cloud Infrastructure DevOps services." 
+description: "Deployment on OKE with Canary strategy by using Oracle Cloud Infrastructure DevOps services."
 schemaVersion: 1.1.0
 version: "20190404"
 locale: "en"
@@ -12,7 +12,7 @@ locale: "en"
 # Variable Groups
 #################
 variableGroups:
-- title: General Configuration
+- title: "General Configuration"
   visible: false
   variables:
   - tenancy_ocid
@@ -50,16 +50,17 @@ variableGroups:
   - deploy_stage_deploy_stage_type
   - execute_deployment
   - release
+  - deploy_rollback_policy
 
 
-- title: Required Configuration
+- title: "Required Configuration"
   visible: true  
   variables:
     - oci_username
     - oci_user_authtoken
     - show_advanced
 
-- title: DevOps Project Configuration
+- title: "DevOps Project Configuration"
   visible: true  
   variables:
     - compartment_id
@@ -67,13 +68,13 @@ variableGroups:
     - project_description
     - project_logging_config_retention_period_in_days
 
-- title: DevOps Build Pipeline Configuration
+- title: "DevOps Build Pipeline Configuration"
   visible: true  
   variables:
     - build_pipeline_description
     - build_pipeline_display_name
 
-- title: DevOps Build Pipeline - Build Stage Configuration
+- title: "DevOps Build Pipeline - Build Stage Configuration"
   visible: true  
   variables:
     - repository_name
@@ -90,10 +91,9 @@ variableGroups:
   visible: true  
   variables:    
     - deliver_artifact_stage_display_name
-    - registry_display_name
     - container_repository_is_public
 
-- title: DevOps Build Pipeline - Deploy Stage Configuration
+- title: "DevOps Build Pipeline - Deploy Stage Configuration"
   visible: true  
   variables:
     - deploy_stage_display_name
@@ -101,7 +101,34 @@ variableGroups:
     - deploy_pipeline_description
     - deploy_artifact_display_name
 
-- title: Encryption Settings
+- title: "DevOps Build Pipeline - Canary Deploy to OKE Stage Configuration"
+  visible: true  
+  variables:
+    - deploy_stage_canary_ingress_name
+    - deploy_stage_canary_namespace
+
+- title: "DevOps Build Pipeline - Canary Approval Stage Configuration"
+  visible: true  
+  variables:
+    - approval_display_name
+    - approval_stage_description
+    - canary_prod_release_count_of_approval
+
+- title: "DevOps Build Pipeline - Canary Shift Stage Configuration"
+  visible: true  
+  variables:
+    - percentage_canary_shift
+    - canary_stage_shift_description
+    - canary_stage_shift_name
+
+- title: "DevOps Build Pipeline - Canary Release to Production Stage Configuration"
+  visible: true  
+  variables:
+    - release_to_production_stage_description
+    - release_to_production_stage_display_name
+    - deploy_stage_prd_namespace
+
+- title: "Encryption Settings"
   description: Policy setting for the stack deployment
   visible: true  
   variables:
@@ -111,7 +138,7 @@ variableGroups:
     - create_vault_policies_for_group
     - user_admin_group_for_vault_policy
 
-- title: OKE Cluster Configuration
+- title: "OKE Cluster Configuration"
   visible: true 
   variables:
     - create_new_oke_cluster
@@ -123,8 +150,9 @@ variableGroups:
     - cluster_workers_visibility
     - cluster_endpoint_visibility
     - k8s_version
+    - ingress_version
 
-- title: OKE Worker Nodes Configuration
+- title: "OKE Worker Nodes Configuration"
   visible: true 
   variables:
     - generate_public_ssh_key
@@ -487,7 +515,6 @@ variables:
     type: string
     title: "DevOps Project Description"
     description: "A short description for the DevOps project"
-    default: "DevOps Project for OKE deployment"
     required: false
     visible: 
       and:
@@ -571,13 +598,6 @@ variables:
     required: false
     visible: true  
 
-  registry_display_name:
-    type: string
-    title: "Registry Display Name"
-    description: "Registry Display Name"
-    required: false
-    visible: true
-
   deliver_artifact_stage_display_name: 
     type: string
     title: "Deliver Artifact Stage Display Name"
@@ -589,13 +609,6 @@ variables:
     type: string
     title: "Deploy Stage Display Name"
     description: "DevOps Build Pipeline Deploy Stage Display Name"
-    required: false
-    visible: true
-
-  deploy_artifact_display_name:
-    type: string
-    title: "Deploy Artifact Display Name"
-    description: "Deploy Artifact Display Name"
     required: false
     visible: true
 
@@ -626,4 +639,84 @@ variables:
     required: false
     visible: true
 
+  canary_prod_release_count_of_approval:
+    type: integer
+    minimum: 1
+    maximum: 255
+    title: "Number of Approvals in DevOps Deploy Approval Stage"
+    description: "Number of Approvals in DevOps Deploy Approval Stage"
+    required: false
+    visible: true
+
+  approval_display_name:
+    type: string
+    title: "Display Name of Approval in DevOps Deploy Approval Stage"
+    description: "Display Name of Approval in DevOps Deploy Approval Stage"
+    required: false
+    visible: true
+
+  approval_stage_description:
+    type: string
+    title: "Description of Approval in DevOps Deploy Approval Stage"
+    description: "Description of Approval in DevOps Deploy Approval Stage"
+    required: false
+    visible: true
+
+  percentage_canary_shift:
+    type: integer
+    minimum: 1
+    maximum: 100
+    title: "Percentage Blue Green Shift"
+    description: "Percentage Blue Green Shift"
+    required: false
+    visible: true
+
+  canary_stage_shift_description:
+    type: string
+    title: "Description of Shift Stage"
+    description: "Description of Shift Stage"
+    required: false
+    visible: true
+
+  canary_stage_shift_name:
+    type: string
+    title: "Name of Shift Stage"
+    description: "Name of Shift Stage"
+    required: false
+    visible: true
+
+  deploy_stage_canary_ingress_name:
+    type: string
+    title: "DevOps Canary Deploy Stage Ingress Name"
+    description: "DevOps Canary Deploy Stage Ingress Name"
+    required: false
+    visible: true
+
+  deploy_stage_canary_namespace:
+    type: string
+    title: "DevOps Canary Deploy Stage Canary Namespace"
+    description: "DevOps Canary Deploy Stage Canary Namespace"
+    required: false
+    visible: true
+
+  release_to_production_stage_description:
+    type: string
+    title: "DevOps Canary Release to Production Stage Description"
+    description: "DevOps Canary Release to Production Stage Description"
+    required: false
+    visible: true
+
+  release_to_production_stage_display_name:
+    type: string
+    title: "DevOps Canary Release to Production Stage Display Name"
+    description: "DevOps Canary Release to Production Stage Display Name"
+    required: false
+    visible: true
+
+  deploy_stage_prd_namespace:
+    type: string
+    title: "DevOps Canary Release to Production Stage Prod Namespace"
+    description: "DevOps Canary Release to Production Stage Prod Namespace"
+    required: false
+    visible: true
 
