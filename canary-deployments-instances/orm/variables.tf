@@ -234,8 +234,6 @@ variable "build_pipeline_stage_deploy_stage_type" {
   default = "TRIGGER_DEPLOYMENT_PIPELINE"
 }
 
-
-
 variable "deploy_stage_display_name" {
   default = "deploy_to_instances"
 }
