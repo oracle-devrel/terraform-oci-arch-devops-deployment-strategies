@@ -126,7 +126,7 @@ variableGroups:
     - approval_stage_description
     - approval_count
 
-- title: "DevOps Build Pipeline - BlueGreen Swtich Stage Configuration"
+- title: "DevOps Build Pipeline - BlueGreen Shift Stage Configuration"
   visible: true  
   variables:
     - blue_green_stage_shift_description
