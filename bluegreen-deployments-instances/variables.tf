@@ -247,18 +247,9 @@ variable "devops_env_blue_displayname"{
   default = "env_instance_blue"
 }
 
-variable "devops_env_blue_query" {
-  default =  "freeformTags.key = 'environment' && freeformTags.value = 'blue'"
-}
-
 variable "devops_env_green_displayname"{
   default = "env_instance_green"
 }
-
-variable "devops_env_green_query" {
-  default =  "freeformTags.key = 'environment' && freeformTags.value = 'green'"
-}
-
 
 variable "bluegreen_deploy_stage_description"{
   default = "Deploy to instances "

@@ -151,9 +151,7 @@ variableGroups:
     - instance_shape_ocpus
     - instance_shape_memory_in_gbs
     - devops_env_prod_displayname
-    - devops_env_prod_query
     - devops_env_canary_displayname
-    - devops_env_canary_query
 
 ######################
 # Variable Definitions
@@ -487,20 +485,10 @@ variables:
     title: "DevOps Prod Environment Display Name"
     description: "DevOps Prod Environment Display Name"
 
-  devops_env_prod_query:
-    type: string
-    title: "DevOps Prod Environment Query"
-    description: "DevOps Prod Environment Query"
-
   devops_env_canary_displayname:
     type: string
     title: "DevOps Canary Environment Display Name"
     description: "DevOps Canary Environment Display Name"
-
-  devops_env_canary_query:
-    type: string
-    title: "DevOps Canary Environment Query"
-    description: "DevOps Canary Environment Query"
 
   project_description:
     type: string

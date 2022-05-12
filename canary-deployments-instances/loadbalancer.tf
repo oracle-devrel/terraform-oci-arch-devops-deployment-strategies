@@ -3,7 +3,7 @@
 
 resource "oci_load_balancer_load_balancer" "test_load_balancer" {
     compartment_id = var.compartment_ocid
-    defined_tags               = {}
+    defined_tags               = { "${oci_identity_tag_namespace.ArchitectureCenterTagNamespace.name}.${oci_identity_tag.ArchitectureCenterTag.name}" = var.release }
     display_name               = var.loadbalancer_display_name
     freeform_tags              = {}
     is_private                 = false

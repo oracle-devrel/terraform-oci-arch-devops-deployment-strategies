@@ -144,9 +144,7 @@ variableGroups:
     - instance_shape_ocpus
     - instance_shape_memory_in_gbs
     - devops_env_blue_displayname
-    - devops_env_blue_query
     - devops_env_green_displayname
-    - devops_env_green_query
 
 ######################
 # Variable Definitions
@@ -464,20 +462,10 @@ variables:
     title: "DevOps Blue Environment Display Name"
     description: "DevOps Blue Environment Display Name"
 
-  devops_env_blue_query:
-    type: string
-    title: "DevOps Blue Environment Query"
-    description: "DevOps Blue Environment Query"
-
   devops_env_green_displayname:
     type: string
     title: "DevOps Green Environment Display Name"
     description: "DevOps Green Environment Display Name"
-
-  devops_env_green_query:
-    type: string
-    title: "DevOps Green Environment Query"
-    description: "DevOps Green Environment Query"
 
   project_description:
     type: string

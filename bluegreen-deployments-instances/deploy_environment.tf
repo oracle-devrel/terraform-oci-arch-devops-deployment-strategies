@@ -15,10 +15,10 @@ resource "oci_devops_deploy_environment" "blue_deploy_environment" {
 
     compute_instance_group_selectors {
         items {
-            compute_instance_ids = []
-            query                = var.devops_env_blue_query
-            region               = var.region
-            selector_type        = "INSTANCE_QUERY"
+            compute_instance_ids = [
+                oci_core_instance.compute_instance_blue.id
+            ]
+            selector_type        = "INSTANCE_IDS"
         }
     }
 
@@ -35,10 +35,10 @@ resource "oci_devops_deploy_environment" "green_deploy_environment" {
 
     compute_instance_group_selectors {
         items {
-            compute_instance_ids = []
-            query                = var.devops_env_green_query
-            region               = var.region
-            selector_type        = "INSTANCE_QUERY"
+            compute_instance_ids = [
+                oci_core_instance.compute_instance_green.id
+            ]
+            selector_type        = "INSTANCE_IDS"
         }
     }
 
