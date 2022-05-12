@@ -1,0 +1,616 @@
+## Copyright (c) 2022, Oracle and/or its affiliates.
+## All rights reserved. The Universal Permissive License (UPL), Version 1.0 as shown at http://oss.oracle.com/licenses/upl
+
+title: "Deployment on Compute Instances with Canary strategy by using OCI DevOps services."
+stackDescription: "Deployment on Compute Instances with Canary strategy by using Oracle Cloud Infrastructure DevOps services." 
+description: "Deployment on Compute Instances with Canary strategy by using Oracle Cloud Infrastructure DevOps services."
+schemaVersion: 1.1.0
+version: "20190404"
+locale: "en"
+
+#################
+# Variable Groups
+#################
+variableGroups:
+- title: General Configuration
+  visible: false
+  variables:
+  - tenancy_ocid
+  - region
+  - user_ocid
+  - fingerprint
+  - private_key_path
+  - network_cidrs
+  - node_pool_boot_volume_size_in_gbs
+  - deploy_pipeline_deploy_pipeline_parameters_items_default_value
+  - deploy_pipeline_deploy_pipeline_parameters_items_description
+  - deploy_pipeline_deploy_pipeline_parameters_items_name
+  - build_pipeline_stage_build_pipeline_stage_predecessor_collection_items_id
+  - build_pipeline_stage_build_pipeline_stage_type
+  - build_pipeline_stage_deliver_artifact_stage_type
+  - build_pipeline_stage_deploy_stage_type
+  - build_pipeline_stage_build_source_collection_items_branch
+  - build_pipeline_stage_build_source_collection_items_connection_type
+  - build_pipeline_stage_build_source_collection_items_name
+  - build_pipeline_stage_build_spec_file
+  - build_pipeline_stage_deliver_artifact_collection_items_artifact_name
+  - build_pipeline_stage_image
+  - build_pipeline_stage_wait_criteria_wait_duration
+  - build_pipeline_stage_wait_criteria_wait_type
+  - deploy_artifact_argument_substitution_mode
+  - deploy_artifact_deploy_artifact_source_deploy_artifact_source_type
+  - deploy_artifact_deploy_artifact_type
+  - repository_repository_type
+  - deploy_artifact_type
+  - deploy_artifact_source_type
+  - deploy_stage_deploy_stage_type
+  - deploy_artifact_source_type
+  - deploy_stage_deploy_stage_type
+  - execute_deployment
+  - release
+
+- title: "Required Configuration"
+  visible: true  
+  variables:
+    - oci_username
+    - oci_user_authtoken
+    - availability_domain_name
+    - show_advanced
+
+- title: "DevOps Project Configuration"
+  visible: true  
+  variables:
+    - compartment_ocid
+    - app_name
+    - project_description
+    - project_logging_config_retention_period_in_days
+
+- title: "DevOps Deploy Artifact Configuration"
+  visible: true  
+  variables:
+    - devops_artifact_name
+    - deploy_artifact_version
+
+- title: "DevOps Build Pipeline Configuration"
+  visible: true  
+  variables:
+    - build_pipeline_description
+    - build_pipeline_display_name
+
+- title: "DevOps Build Pipeline - Build Stage Configuration"
+  visible: true  
+  variables:
+    - repository_name
+    - repository_default_branch
+    - repository_description
+    - git_repo
+    - git_repo_name
+    - build_pipeline_stage_build_source_collection_items_name 
+    - build_pipeline_stage_display_name
+    - build_pipeline_stage_is_pass_all_parameters_enabled
+    - build_pipeline_stage_stage_execution_timeout_in_seconds
+    - deploy_stage_display_name
+
+- title: "DevOps Build Pipeline - Deliver Stage Configuration"
+  visible: true  
+  variables:    
+    - deliver_artifact_stage_display_name
+
+- title: DevOps Build Pipeline - Deploy Stage Configuration
+  visible: true  
+  variables:    
+    - deploy_stage_display_name
+    - deploy_pipeline_description
+
+- title: "DevOps Build Pipeline - Canary Deploy to Instance Stage Configuration"
+  visible: true  
+  variables:
+    - canary_deploy_stage_name
+    - canary_deploy_stage_description
+    - loadbalancer_shape
+    - loadbalancer_maximum_bandwidth_in_mbps
+    - loadbalancer_minimum_bandwidth_in_mbps
+    - loadbalancer_display_name
+    - loadbalancer_listener_port
+    - loadbalancer_listner_name
+    - loadbalancer_backend_port
+    - loadbalancer_backend_set_name
+    - loadbalancer_backendset_policy
+    - loadbalancer_backendset_port
+    - batch_delay_in_seconds
+
+- title: "DevOps Build Pipeline - Canary Approval Stage Configuration"
+  visible: true  
+  variables:
+    - approval_display_name
+    - approval_stage_description
+    - approval_count
+
+- title: "DevOps Build Pipeline - Canary Traffic Shift Stage Configuration"
+  visible: true  
+  variables:
+    - canary_traffic_shift_description
+    - canary_traffic_shift_name
+    - canary_traffic_shift_ramp_limit
+
+- title: "DevOps Build Pipeline - Canary Production Release Stage Configuration"
+  visible: true  
+  variables:
+    - canary_production_description
+    - canary_production_name
+
+- title: "DevOps Instances Environment Configuration"
+  visible: true  
+  variables:
+    - ssh_public_key
+    - instance_os
+    - linux_os_version
+    - compute_instance_prod_name
+    - compute_instance_canary_name
+    - instance_shape
+    - instance_shape_ocpus
+    - instance_shape_memory_in_gbs
+    - devops_env_prod_displayname
+    - devops_env_canary_displayname
+
+######################
+# Variable Definitions
+######################
+
+variables:
+
+# Required
+
+  oci_username:
+    type: string
+    required: true
+    visibile: true
+    title: "OCI username"
+    description: "For a federated user (single sign-on with an identity provider), enter the username in the following format: TenancyName/Federation/UserName. For example, if you use OCI's identity provider, your login would be, Acme/oracleidentitycloudservice/alice.jones@acme.com. If you are using OCI's direct sign-in, enter the username in the following format: TenancyName/YourUserName. For example, Acme/alice_jones. Your password is the auth token you created previously."
+
+  oci_user_authtoken:
+    type: password
+    required: true
+    visibile: true
+    title: "OCI user auth token"
+    description: "You can get the auth token from your Profile menu -> click User Settings -> On left side  click *Auth Tokens -> Generate Token"
+
+  availability_domain_name:
+    type: oci:identity:availabilitydomain:name
+    required: true
+    visibile: true
+    title: "Availability Domain to be chosen"
+    description: "Choose Availability Domain where your infrastructure will be deployed."
+    dependsOn:
+      regionName: ${region}
+      compartmentId: ${compartment_ocid}
+
+  show_advanced:
+    type: boolean
+    title: "Show advanced options?"
+    description: "Shows advanced options."
+    visible: true
+    default: false
+
+  compartment_ocid: 
+    type: oci:identity:compartment:id
+    title: "Compartment"
+    description: "The compartment in which to create resources"
+    required: true
+
+  app_name:
+    type: string
+    title: "Project Name"
+    required: true
+
+  project_logging_config_retention_period_in_days:
+    type: number
+    minimum: 1
+    maximum: 65535
+    title: "Project Logs retention period"
+    description: "Days to retain logs from the Project."
+    default: 30
+    required: true
+    visible: 
+      and:
+        - show_advanced
+
+  ssh_public_key:
+    type: oci:core:ssh:publickey
+    title: "Import your own SSH public key"
+    additionalProps:
+      allowMultiple: true
+    required: false
+    pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
+    visible:
+      and:
+        - show_advanced
+
+  instance_shape:
+    type: oci:core:instanceshape:name
+    title: "Select a shape for Instances"
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: true
+
+  instance_shape_ocpus:
+    type: integer
+    minimum: 1
+    maximum: 64
+    title: "Number of OCPUs"
+    visible:
+      and:
+        - or:
+          - eq:
+            - instance_shape 
+            - "VM.Standard.E3.Flex"
+          - eq:
+            - instance_shape 
+            - "VM.Standard.E4.Flex"
+          - eq:
+            - instance_shape 
+            - "VM.Standard.A1.Flex"
+
+  instance_shape_memory_in_gbs:
+    type: integer
+    minimum: 1
+    maximum: 1024
+    title: "Amount of memory (GB)"
+    visible:
+      and:
+        - or:
+          - eq:
+            - instance_shape 
+            - "VM.Standard.E3.Flex"
+          - eq:
+            - instance_shape 
+            - "VM.Standard.E4.Flex"
+          - eq:
+            - instance_shape 
+            - "VM.Standard.A1.Flex"
+
+  instance_os:
+    type: enum
+    title: "Image OS"
+    enum:
+      - "Oracle Linux"
+    required: false
+    visible:
+      and:
+        - show_advanced
+
+  linux_os_version:
+    type: string
+    required: false
+    title: "Image OS Version"
+    visible:
+      and:
+        - show_advanced
+
+  loadbalancer_shape:
+    type: enum
+    title: "LoadBalancer Shape"
+    description: "Load Balancer Shape"
+    default: "flexible"
+    required: false 
+    enum:
+      - "flexible"
+      - "100Mbps"
+      - "10Mbps"
+      - "10Mbps-Micro"
+      - "400Mbps"
+      - "8000Mbps"
+
+  loadbalancer_minimum_bandwidth_in_mbps:
+    type: enum
+    required: false
+    default: "10"
+    title: "LoadBalancer Flex Min Bandwidth in mbps"
+    description: "Choose minimum bandwidth in mbps for Flex Load Balancer."
+    enum:
+      - "10"
+      - "100"
+      - "1000"
+      - "400"
+      - "8000"
+    visible:
+      and:
+        - eq:
+          - loadbalancer_shape 
+          - "flexible"
+
+  loadbalancer_maximum_bandwidth_in_mbps:
+    type: enum
+    required: false
+    default: "10"
+    title: "LoadBalancer Flex Max Bandwidth in mbps"
+    description: "Choose maximum bandwidth in mbps for Flex Load Balancer."
+    enum:
+      - "10"
+      - "100"
+      - "1000"
+      - "400"
+      - "8000"
+    visible:
+      and:
+        - eq:
+          - loadbalancer_shape 
+          - "flexible"
+
+  loadbalancer_display_name:
+    type: string
+    title: "LoadBalancer Display Name"
+    description: "LoadBalancer Display Name"
+    visible:
+      and:
+        - show_advanced
+
+  loadbalancer_backend_port:
+    type: integer
+    minimum: 1
+    maximum: 65535
+    title: "LoadBalancer Backend Port"
+    description: "LoadBalancer Backend Port"
+    visible:
+      and:
+        - show_advanced
+
+  loadbalancer_backend_set_name:
+    type: string
+    title: "LoadBalancer BackendSet Name"
+    description: "LoadBalancer BackendSet Name"
+    visible:
+      and:
+        - show_advanced
+
+  loadbalancer_backendset_policy:
+    type: enum
+    title: "LoadBalancer BackendSet Policy"
+    description: "LoadBalancer BackendSet Policy"
+    enum:
+      - "ROUND_ROBIN"
+      - "IP_HASH"
+      - "LEAST_CONNECTIONS"
+    visible:
+      and:
+        - show_advanced
+
+  loadbalancer_backendset_port:
+    type: integer
+    minimum: 1
+    maximum: 65535
+    title: "LoadBalancer BackendSet Port"
+    description: "LoadBalancer BackendSet Port (health_checker)"
+    visible:
+      and:
+        - show_advanced
+
+  loadbalancer_listener_port:
+    type: integer
+    minimum: 1
+    maximum: 65535
+    title: "LoadBalancer Listener Port"
+    description: "LoadBalancer Listener Port"
+    visible:
+      and:
+        - show_advanced
+
+  loadbalancer_listner_name:
+    type: string
+    title: "LoadBalancer Listener Name"
+    description: "LoadBalancer Listener Name"
+    visible:
+      and:
+        - show_advanced
+
+  approval_count:
+    type: integer
+    minimum: 1
+    maximum: 255
+    title: "Number of Approvals in DevOps Deploy Approval Stage"
+    description: "Number of Approvals in DevOps Deploy Approval Stage"
+
+  approval_display_name:
+    type: string
+    title: "Display Name of Approval in DevOps Deploy Approval Stage"
+    description: "Display Name of Approval in DevOps Deploy Approval Stage"
+
+  approval_stage_description:
+    type: string
+    title: "Description of Approval in DevOps Deploy Approval Stage"
+    description: "Description of Approval in DevOps Deploy Approval Stage"
+
+  batch_delay_in_seconds:
+    type: integer
+    minimum: 1
+    maximum: 255
+    title: "Batch delay"
+    description: "Number of Approvals in DevOps Deploy Approval Stage"
+
+  canary_traffic_shift_description:
+    type: string
+    title: "Description for DevOps Deploy Canary Traffic Shift Stage"
+    description: "Description for DevOps Deploy Canary Traffic Shift Stage"
+
+  canary_traffic_shift_name:
+    type: string
+    title: "Name for DevOps Deploy Canary Traffic Shift Stage"
+    description: "Name for DevOps Deploy Canary Traffic Shift Stage"
+
+  canary_traffic_shift_ramp_limit:
+    type: integer
+    minimum: 1
+    maximum: 255
+    title: "Ramp Limit for DevOps Deploy Canary Traffic Shift"
+    description: "Ramp Limit for DevOps Deploy Canary Traffic Shift"    
+
+  canary_production_description:
+    type: string
+    title: "Description for DevOps Deploy Canary Production Release Stage"
+    description: "Description for DevOps Deploy Canary Production Release Stage"
+
+  canary_production_name:
+    type: string
+    title: "Name for DevOps Deploy Canary Production Release Stage"
+    description: "Name for DevOps Deploy Canary Production Release Stage"
+
+  canary_deploy_stage_name:
+    type: string
+    title: "Name for DevOps Deploy Canary Deploy to Instance Stage"
+    description: "Name for DevOps Deploy Canary Deploy to Instance Stage"
+
+  compute_instance_prod_name:
+    type: string
+    title: "Name for Prod Compute Instance"
+    description: "Name for Prod Compute Instance"
+
+  compute_instance_canary_name:
+    type: string
+    title: "Name for Canary Compute Instance"
+    description: "Name for Canary Compute Instance"
+
+  deploy_artifact_version:
+    type: string
+    title: "DevOps Artifact Version"
+    description: "DevOps Artifact Version"
+
+  devops_artifact_name:
+    type: string
+    title: "DevOps Artifact Name"
+    description: "DevOps Artifact Name"
+
+  devops_env_prod_displayname:
+    type: string
+    title: "DevOps Prod Environment Display Name"
+    description: "DevOps Prod Environment Display Name"
+
+  devops_env_canary_displayname:
+    type: string
+    title: "DevOps Canary Environment Display Name"
+    description: "DevOps Canary Environment Display Name"
+
+  project_description:
+    type: string
+    title: "DevOps Project Description"
+    description: "A short description for the DevOps project"
+    default: "DevOps CI/CD Sample Project for Canary Deployment (Instances)"
+    required: false
+    visible: 
+      and:
+        - show_advanced
+  
+  build_pipeline_stage_display_name:
+    type: string
+    title: "DevOps Build Pipeline Stage Name"
+    description: "Name for the DevOps Build Pipeline Stage"
+    required: false
+    visible: true
+
+  build_pipeline_display_name:
+    type: string
+    title: "DevOps Build Pipeline Display Name"
+    description: "Name for the DevOps Build Pipeline Description"
+    required: false
+    visible: true    
+
+  build_pipeline_description:
+    type: string
+    title: "DevOps Build Pipeline Description"
+    description: "A short description for the DevOps Build Pipeline Description"
+    required: false
+    visible: true
+
+  repository_name:
+    type: string
+    title: "DevOps Repository Name"
+    description: "Name for DevOps Repository"
+    required: false
+    visible: true
+
+  repository_default_branch:
+    type: string
+    title: "DevOps Repository Default Branch"
+    description: "Choose Defaulf Branch for DevOps Repository"
+    required: false
+    visible: true
+
+  repository_description:
+    type: string
+    title: "DevOps Repository Description"
+    description: "A short description for the DevOps Repository"
+    required: false
+    visible: true
+
+  git_repo:
+    type: string
+    title: "GitHub.com Repository URL"
+    description: "GitHub.com Repository URL for making git clone command"
+    required: false
+    visible: true
+
+  git_repo_name:
+    type: string
+    title: "GitHub.com Repository Name"
+    description: "GitHub.com Repository Name for making git clone command"
+    required: false
+    visible: true
+
+  build_pipeline_stage_build_source_collection_items_name:
+    type: string
+    title: "Build Pipeline Build Stage Source Collection Items Name"
+    description: "Build Pipeline Build Stage Source Collection Items Name"
+    required: false
+    visible: true
+
+  build_pipeline_stage_stage_execution_timeout_in_seconds:
+    required: false
+    title: "DevOps Build Pipeline Stage execution timeout (in sec)"
+    description: "DevOps Build Pipeline Stage execution timeout (in sec)"
+    type: integer   
+    minimum: 36000
+    maximum: 360000
+    multipleOf: 1
+    default: 36000
+
+  deliver_artifact_stage_display_name: 
+    type: string
+    title: "Deliver Artifact Stage Display Name"
+    description: "DevOps Build Pipeline Deliver Artifact Stage Display Name"
+    required: false
+    visible: true
+  
+  deploy_stage_display_name:
+    type: string
+    title: "Deploy Stage Display Name"
+    description: "DevOps Build Pipeline Deploy Stage Display Name"
+    required: false
+    visible: true
+
+  deploy_pipeline_description:
+    type: string
+    title: "DevOps Deploy Pipeline Description"
+    description: "A short description for the DevOps Deploy Pipeline"
+    required: false
+    visible: true
+
+  canary_deploy_stage_description:
+    type: string
+    title: "DevOps Canary Deploy Stage Pipeline Description"
+    description: "A short description for the DevOps Canary Deploy Pipeline"
+    required: false
+    visible: true
+
+  execute_deployment:
+    type: boolean
+    title: "Execure deployment?"
+    required: false
+    visible: true
+
+  build_pipeline_stage_is_pass_all_parameters_enabled:
+    type: boolean
+    title: "Build Pipeline Stage: is pass all parameters enabled?"
+    description: "DevOps Build Pipeline Deploy Stage - enable passing all parameters." 
+    required: false
+    visible: true
+

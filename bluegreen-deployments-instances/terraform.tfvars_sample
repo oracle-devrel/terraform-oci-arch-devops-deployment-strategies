@@ -1,0 +1,19 @@
+# Authentication
+tenancy_ocid         = ""
+user_ocid            = ""
+fingerprint          = ""
+private_key_path     = ""
+
+# Region
+region = ""
+
+# Compartment
+compartment_ocid = ""
+
+# OCI  
+oci_username         = "tenacy/username or federation details/tenancy/username"
+oci_user_authtoken     = ""
+
+# Set a specific name for your deployments to prefix with a tag.
+app_name = ""
+
