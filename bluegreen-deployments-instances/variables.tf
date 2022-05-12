@@ -292,4 +292,13 @@ variable "blue_green_stage_shift_name"{
   default = "blue_green_traffic_shift"
 }
 
-
+locals {
+  instance_shape = [
+    "VM.Standard.E3.Flex",
+    "VM.Standard.E4.Flex",
+    "VM.Standard.A1.Flex",
+    "VM.Optimized3.Flex"
+  ]
+  is_flexible_node_shape = contains(local.instance_shape, var.instance_shape)
+  is_flexible_lb_shape   = var.loadbalancer_shape == "flexible" ? true : false
+}

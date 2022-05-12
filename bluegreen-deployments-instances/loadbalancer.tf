@@ -13,15 +13,16 @@ resource "oci_load_balancer_load_balancer" "test_load_balancer" {
        oci_core_subnet.subnet.id
     ]
     
-    shape_details {
-        maximum_bandwidth_in_mbps = var.loadbalancer_maximum_bandwidth_in_mbps
+    dynamic "shape_details" {
+      for_each = local.is_flexible_lb_shape ? [1] : []
+      content {
         minimum_bandwidth_in_mbps = var.loadbalancer_minimum_bandwidth_in_mbps
-    }
+        maximum_bandwidth_in_mbps = var.loadbalancer_maximum_bandwidth_in_mbps
+      }
+    }  
 }
 
-
 resource "oci_load_balancer_backend_set" "test_backend_set" {
-    
     load_balancer_id = oci_load_balancer_load_balancer.test_load_balancer.id
     name             = var.loadbalancer_backend_set_name
     policy           = var.loadbalancer_backendset_policy 

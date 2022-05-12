@@ -26,9 +26,12 @@ resource "oci_core_instance" "compute_instance_prod" {
         "environment" = "prod"
     }
 
-  shape_config {
-    ocpus         = var.instance_ocpus
-    memory_in_gbs = var.instance_shape_config_memory_in_gbs
+  dynamic "shape_config" {
+    for_each = local.is_flexible_node_shape ? [1] : []
+    content {
+      memory_in_gbs = var.instance_shape_memory_in_gbs
+      ocpus         = var.instance_shape_ocpus
+    }
   }
 
   metadata = {
@@ -65,11 +68,14 @@ resource "oci_core_instance" "compute_instance_canary" {
   fault_domain        = "FAULT-DOMAIN-1"
   freeform_tags       = {
         "environment" = "canary"
-    }
+  }
 
-  shape_config {
-    ocpus         = var.instance_ocpus
-    memory_in_gbs = var.instance_shape_config_memory_in_gbs
+  dynamic "shape_config" {
+    for_each = local.is_flexible_node_shape ? [1] : []
+    content {
+      memory_in_gbs = var.instance_shape_memory_in_gbs
+      ocpus         = var.instance_shape_ocpus
+    }
   }
 
   metadata = {

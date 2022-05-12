@@ -52,11 +52,11 @@ variable "instance_shape" {
   default     = "VM.Standard.E4.Flex"
 }
 
-variable "instance_ocpus" {
+variable "instance_shape_ocpus" {
   default = 1
 }
 
-variable "instance_shape_config_memory_in_gbs" {
+variable "instance_shape_memory_in_gbs" {
   default = 1
 }
 
@@ -70,7 +70,7 @@ variable "linux_os_version" {
   default     = "8"
 }
 
-variable "availablity_domain_name" {
+variable "availability_domain_name" {
   default = ""
 }
 
@@ -91,7 +91,7 @@ variable "repository_default_branch" {
 }
 
 variable "repository_description" {
-  default = "OCI Devops blue greeninstance sample application"
+  default = "OCI Devops blue green instance sample application"
 }
 
 variable "repository_repository_type" {
@@ -194,11 +194,15 @@ variable "loadbalancer_listner_name"{
   default = "devops_lb_listner"
 }
 
-variable "maximum_bandwidth_in_mbps" {
+variable "loadbalancer_shape" {
+  default = "flexible"
+}
+
+variable "loadbalancer_maximum_bandwidth_in_mbps" {
   default = 10
 }
 
-variable "minimum_bandwidth_in_mbps" {
+variable "loadbalancer_minimum_bandwidth_in_mbps" {
   default = 10 
 }
 
@@ -218,6 +222,10 @@ variable "loadbalancer_backend_port" {
   default = 80
 }
 
+variable "loadbalancer_listener_port" {
+  default = 80
+}
+
 variable "deploy_pipeline_description" {
   default = "Devops CI/CD Pipleline demo for Instances  with bluegreen model"
 }
@@ -225,8 +233,6 @@ variable "deploy_pipeline_description" {
 variable "build_pipeline_stage_deploy_stage_type" {
   default = "TRIGGER_DEPLOYMENT_PIPELINE"
 }
-
-
 
 variable "deploy_stage_display_name" {
   default = "deploy_to_instances"
@@ -286,4 +292,13 @@ variable "blue_green_stage_shift_name"{
   default = "blue_green_traffic_shift"
 }
 
-
+locals {
+  instance_shape = [
+    "VM.Standard.E3.Flex",
+    "VM.Standard.E4.Flex",
+    "VM.Standard.A1.Flex",
+    "VM.Optimized3.Flex"
+  ]
+  is_flexible_node_shape = contains(local.instance_shape, var.instance_shape)
+  is_flexible_lb_shape   = var.loadbalancer_shape == "flexible" ? true : false
+}

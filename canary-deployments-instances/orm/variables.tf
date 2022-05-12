@@ -35,7 +35,7 @@ variable "project_logging_config_retention_period_in_days" {
 }
 
 variable "project_description" {
-  default = "DevOps CI/CD Sample Project (Canary Instances)"
+  default = "DevOps CI/CD Sample Project for Instance Canary Deployment"
 }
 
 
@@ -207,7 +207,7 @@ variable "loadbalancer_minimum_bandwidth_in_mbps" {
 }
 
 variable "loadbalancer_backend_set_name" {
-  default = "lb_backendset_for_bluegreen"
+  default = "lb_backendset_for_canary"
 }
 
 variable "loadbalancer_backendset_policy" {
@@ -306,3 +306,13 @@ variable "canary_production_name"{
   default = "production_release"
 }
 
+locals {
+  instance_shape = [
+    "VM.Standard.E3.Flex",
+    "VM.Standard.E4.Flex",
+    "VM.Standard.A1.Flex",
+    "VM.Optimized3.Flex"
+  ]
+  is_flexible_node_shape = contains(local.instance_shape, var.instance_shape)
+  is_flexible_lb_shape   = var.loadbalancer_shape == "flexible" ? true : false
+}

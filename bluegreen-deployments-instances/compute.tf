@@ -28,9 +28,12 @@ resource "oci_core_instance" "compute_instance_blue" {
         "environment" = "blue"
     }
 
-  shape_config {
-    ocpus         = var.instance_shape_ocpus
-    memory_in_gbs = var.instance_shape_memory_in_gbs
+  dynamic "shape_config" {
+    for_each = local.is_flexible_node_shape ? [1] : []
+    content {
+      memory_in_gbs = var.instance_shape_memory_in_gbs
+      ocpus         = var.instance_shape_ocpus
+    }
   }
 
   metadata = {
@@ -69,9 +72,12 @@ resource "oci_core_instance" "compute_instance_green" {
         "environment" = "green"
     }
 
-  shape_config {
-    ocpus         = var.instance_shape_ocpus
-    memory_in_gbs = var.instance_shape_memory_in_gbs
+  dynamic "shape_config" {
+    for_each = local.is_flexible_node_shape ? [1] : []
+    content {
+      memory_in_gbs = var.instance_shape_memory_in_gbs
+      ocpus         = var.instance_shape_ocpus
+    }
   }
 
   metadata = {
