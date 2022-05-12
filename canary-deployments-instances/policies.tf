@@ -37,7 +37,7 @@ resource "oci_identity_dynamic_group" "runcmddynamicgroup" {
   name           = "${var.app_name}_runcmddygroup${random_id.tag.hex}"
   description    = "run_cmd Pipeline Dynamic Group"
   compartment_id = var.tenancy_ocid
-  matching_rule  = "All {instance.id = '${oci_core_instance.compute_instance_prod.id}',instance.id = '${oci_core_instance.compute_instance_canary.id}'}"
+  matching_rule = "All {instance.compartment.id = '${var.compartment_ocid}'}"
 }
 
 
@@ -48,22 +48,19 @@ resource "oci_identity_policy" "devopspolicy" {
   compartment_id = var.compartment_ocid
 
   statements = [
-   "Allow group Administrators to manage devops-family in compartment id ${var.compartment_ocid}",
+    "Allow group Administrators to manage devops-family in compartment id ${var.compartment_ocid}",
     "Allow group Administrators to manage all-artifacts in compartment id ${var.compartment_ocid}",
     "Allow group ${oci_identity_group.devops.name} to manage instance-agent-command-family in compartment id ${var.compartment_ocid}",
     "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to use ons-topics in compartment id ${var.compartment_ocid}",
-    "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to use instance-agent-command-execution-family in compartment id ${var.compartment_ocid} where request.instance.id='${oci_core_instance.compute_instance_prod.id}'",
-    "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to use instance-agent-command-execution-family in compartment id ${var.compartment_ocid} where request.instance.id='${oci_core_instance.compute_instance_canary.id}'",
     "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} manage all-resources in compartment id ${var.compartment_ocid}",
-    "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to read generic-artifacts in compartment id ${var.compartment_ocid}",
     "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to read all-artifacts in compartment id ${var.compartment_ocid}",
     "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to manage objects in compartment id ${var.compartment_ocid}",
     "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to manage generic-artifacts in compartment id ${var.compartment_ocid}",
     "Allow dynamic-group ${oci_identity_dynamic_group.devopsgroup1.name} to manage repos in compartment id ${var.compartment_ocid}",
-    "Allow dynamic-group ${oci_identity_dynamic_group.runcmddynamicgroup.name} to use instance-agent-command-execution-family in compartment id ${var.compartment_ocid} where request.instance.id='${oci_core_instance.compute_instance_prod.id}'",
-    "Allow dynamic-group ${oci_identity_dynamic_group.runcmddynamicgroup.name} to use instance-agent-command-execution-family in compartment id ${var.compartment_ocid} where request.instance.id='${oci_core_instance.compute_instance_canary.id}'",
-    "Allow dynamic-group ${oci_identity_dynamic_group.runcmddynamicgroup.name} to read objects in compartment id ${var.compartment_ocid}",
-    "Allow dynamic-group ${oci_identity_dynamic_group.runcmddynamicgroup.name} to manage objects in compartment id ${var.compartment_ocid}",
+    "Allow dynamic-group ${oci_identity_dynamic_group.runcmddynamicgroup.name} to use instance-agent-command-execution-family in compartment id ${var.compartment_ocid}",
+   "Allow dynamic-group ${oci_identity_dynamic_group.runcmddynamicgroup.name} to read objects in compartment id ${var.compartment_ocid}",
+   "Allow dynamic-group ${oci_identity_dynamic_group.runcmddynamicgroup.name} to manage objects in compartment id ${var.compartment_ocid}",
+     
   ]
 }
 
