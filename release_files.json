@@ -161,6 +161,6 @@
     },
     {
       "action": "upload_file",
-      "file_name": "terraform-oci-arch-devops-deployment-strategies-canary-deployments-instances-stack-latest.zip"
+      "file_name": "terraform-oci-arch-devops-deployment-strategies-canary-deployments-oke-stack-latest.zip"
     }
   ]
