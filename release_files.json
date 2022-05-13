@@ -72,7 +72,7 @@
           "dst": "git-askpass-helper.sh"
         },
         {
-          "src_pattern": "bluegreen-deployments-oke/userdata/*",
+          "src_pattern": "bluegreen-deployments-oke/manifest/*",
           "dst_path": "."
         }
       ]
@@ -154,13 +154,13 @@
           "dst": "git-askpass-helper.sh"
         },
         {
-          "src_pattern": "canary-deployments-oke/userdata/*",
+          "src_pattern": "canary-deployments-oke/manifest/*",
           "dst_path": "."
         }
       ]
     },
     {
       "action": "upload_file",
-      "file_name": "terraform-oci-arch-devops-deployment-strategies-canary-deployments-instances-stack-latest.zip"
+      "file_name": "terraform-oci-arch-devops-deployment-strategies-canary-deployments-oke-stack-latest.zip"
     }
   ]
