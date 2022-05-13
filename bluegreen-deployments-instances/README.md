@@ -81,9 +81,15 @@ Deploy:
     terraform plan
     terraform apply
 
+## Test the deployment.
+Follow the link here to test the deployment - [procedure](https://github.com/oracle-devrel/oci-devops-examples/tree/main/oci-deployment-examples/oci-devops-deploy-instances-with-blue-green-model#lets-test)
+
 
 ## Destroy the Deployment
 When you no longer need the deployment, you can run this command to destroy it:
+
+- Ensure to delete all  artifacts via `OCI Console` > `Artifact Registry` > `Artifact Repo Name` for the destroy action.
+
 
     terraform destroy
 
