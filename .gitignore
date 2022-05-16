@@ -31,3 +31,9 @@ Temporary Items
 .crt
 .csr
 .pem
+
+# Sample files
+
+oci_devops**
+oci-devops**
+**generated/**
