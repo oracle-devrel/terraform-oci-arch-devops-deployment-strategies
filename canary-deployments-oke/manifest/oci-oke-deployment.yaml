@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sample-oke-bg-app-deployment
+  name: sample-oke-canary-app-deployment
 spec:
   selector:
     matchLabels:
-      app: sample-oke-bg-app
+      app: sample-oke-canary-app
   replicas: 3
   template:
     metadata:
       labels:
-        app: sample-oke-bg-app
+        app: sample-oke-canary-app
     spec:
       containers:
-        - name: sample-oke-bg-app
+        - name: sample-oke-canary-app
           # enter the path to your image, be sure to include the correct region prefix
           image: ${region}/${name}/${image}:${hash}
           imagePullPolicy: Always
@@ -36,7 +36,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: sample-oke-bg-app-service
+  name: sample-oke-canary-app-service
   annotations: 
     service.beta.kubernetes.io/oci-load-balancer-shape: "10Mbps"
 spec:
@@ -46,12 +46,12 @@ spec:
       protocol: TCP
       targetPort: 80
   selector:
-    app: sample-oke-bg-app
+    app: sample-oke-canary-app
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: sample-oke-bg-app-ing
+  name: sample-oke-canary-app-ing
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
@@ -64,6 +64,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: sample-oke-bg-app-service
+              name: sample-oke-canary-app-service
               port:
                 number: 8080
