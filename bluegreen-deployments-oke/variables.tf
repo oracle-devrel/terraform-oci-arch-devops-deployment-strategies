@@ -50,7 +50,7 @@ variable "repository_description" {
 }
 
 variable "git_repo" {
-  default = "https://github.com/RahulMR42/oci-devops-deploy-oke-with-blue-green-model.git"
+  default = "https://github.com/oracle-devrel/python-oci-bluegreen-oke-app.git"
 }
 
 variable "git_repo_name" {
