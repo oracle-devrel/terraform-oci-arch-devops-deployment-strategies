@@ -99,7 +99,7 @@ variable "repository_repository_type" {
 }
 
 variable "git_repo" {
-  default = "https://github.com/RahulMR42/oci-devops-deploy-instances-with-blue-green-model.git"
+  default = "https://github.com/oracle-devrel/python-oci-bluegreen-instance-app.git"
 }
 
 variable "git_repo_name" {

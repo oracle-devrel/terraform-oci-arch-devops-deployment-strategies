@@ -99,7 +99,7 @@ variable "repository_repository_type" {
 }
 
 variable "git_repo" {
-  default = "https://github.com/RahulMR42/oci-devops-deploy-instances-with-canary-model.git"
+  default = "https://github.com/oracle-devrel/python-oci-canary-instance-app.git"
 }
 
 variable "git_repo_name" {
