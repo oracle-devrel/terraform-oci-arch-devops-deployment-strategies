@@ -27,7 +27,7 @@ variable "app_name" {
 
 variable "release" {
   description = "Reference Architecture Release (OCI Architecture Center)"
-  default     = "1.0"
+  default     = "1.1"
 }
 
 variable "project_logging_config_retention_period_in_days" {
@@ -99,11 +99,11 @@ variable "repository_repository_type" {
 }
 
 variable "git_repo" {
-  default = "https://github.com/RahulMR42/oci-devops-deploy-instances-with-canary-model.git"
+  default = "https://github.com/oracle-devrel/python-oci-canary-instance-app.git"
 }
 
 variable "git_repo_name" {
-  default = "oci-devops-deploy-instances-with-canary-model"
+  default = "python-oci-canary-instance-app"
 }
 
 
