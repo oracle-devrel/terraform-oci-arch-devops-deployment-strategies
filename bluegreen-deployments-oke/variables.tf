@@ -18,7 +18,7 @@ variable "oci_user_authtoken" {}
 
 variable "release" {
   description = "Reference Architecture Release (OCI Architecture Center)"
-  default     = "1.0"
+  default     = "1.1"
 }
 
 variable "project_logging_config_retention_period_in_days" {
@@ -54,7 +54,7 @@ variable "git_repo" {
 }
 
 variable "git_repo_name" {
-  default = "oci-devops-deploy-oke-with-blue-green-model"
+  default = "python-oci-bluegreen-oke-app"
 }
 
 variable "build_pipeline_stage_build_pipeline_stage_predecessor_collection_items_id" {

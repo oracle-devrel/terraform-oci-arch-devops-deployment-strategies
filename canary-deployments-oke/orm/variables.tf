@@ -18,7 +18,7 @@ variable "oci_user_authtoken" {}
 
 variable "release" {
   description = "Reference Architecture Release (OCI Architecture Center)"
-  default     = "1.0"
+  default     = "1.1"
 }
 
 variable "project_logging_config_retention_period_in_days" {
@@ -50,11 +50,11 @@ variable "repository_description" {
 }
 
 variable "git_repo" {
-  default = "https://github.com/RahulMR42/oci-devops-deploy-with-canary-oke.git"
+  default = "https://github.com/oracle-devrel/python-oci-canary-oke-app.git"
 }
 
 variable "git_repo_name" {
-  default = "oci-devops-deploy-with-canary-oke"
+  default = "python-oci-canary-oke-app"
 }
 
 variable "build_pipeline_stage_build_pipeline_stage_predecessor_collection_items_id" {
